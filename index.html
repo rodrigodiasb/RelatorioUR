@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
+            max-width: 500px;
             margin: auto;
             padding: 20px;
         }
@@ -15,12 +15,23 @@
             display: block;
             width: 100%;
             margin-bottom: 10px;
+            font-size: 16px;
+        }
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        textarea {
+            resize: none;
+            overflow: hidden;
         }
         button {
             margin-top: 10px;
             padding: 10px;
             width: 100%;
             cursor: pointer;
+            font-size: 16px;
         }
         #relatorio {
             white-space: pre-wrap;
@@ -33,25 +44,47 @@
 </head>
 <body>
     <h2>Preenchimento de Relatório</h2>
-    <label>Paciente: <input type="text" id="paciente"></label>
-    <label>CPF: <input type="text" id="cpf"></label>
-    <label>Situação: <textarea id="situacao"></textarea></label>
-    <label>Procedimento realizado: <textarea id="procedimento"></textarea></label>
-    <label>FC: <input type="text" id="fc"></label>
-    <label>PA: <input type="text" id="pa"></label>
-    <label>Sat: <input type="text" id="sat"></label>
-    <label>MR: <input type="text" id="mr"></label>
-    <label>Glasgow: <input type="text" id="glasgow"></label>
-    <label>Regulado para: <input type="text" id="regulado"></label>
-    <label>Dr.: <input type="text" id="dr"></label>
-    <label>Senha: <input type="text" id="senha"></label>
-    <label>Dra. responsável: <input type="text" id="dra"></label>
-    
+    <form id="formRelatorio">
+        <label>Paciente: <input type="text" id="paciente"></label>
+        <label>CPF: <input type="text" id="cpf"></label>
+        <label>Situação: <textarea id="situacao" rows="2"></textarea></label>
+        <label>Procedimento realizado: <textarea id="procedimento" rows="2"></textarea></label>
+        <label>FC: <input type="text" id="fc"></label>
+        <label>PA: <input type="text" id="pa"></label>
+        <label>Sat: <input type="text" id="sat"></label>
+        <label>MR: <input type="text" id="mr"></label>
+        <label>Glasgow: <input type="text" id="glasgow"></label>
+        <label>Regulado para: <input type="text" id="regulado"></label>
+        <label>Dr.: <input type="text" id="dr"></label>
+        <label>Senha: <input type="text" id="senha"></label>
+        <label>Dra. responsável: <input type="text" id="dra"></label>
+    </form>
+
     <button onclick="gerarRelatorio()">Gerar Relatório</button>
     <div id="relatorio"></div>
     <button onclick="copiarRelatorio()">Copiar Relatório</button>
 
     <script>
+        document.querySelectorAll("input, textarea").forEach(element => {
+            element.addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    const inputs = [...document.querySelectorAll("input, textarea")];
+                    const index = inputs.indexOf(event.target);
+                    if (index >= 0 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+            });
+
+            if (element.tagName === "TEXTAREA") {
+                element.addEventListener("input", function() {
+                    this.style.height = "auto";
+                    this.style.height = (this.scrollHeight) + "px";
+                });
+            }
+        });
+
         function gerarRelatorio() {
             const paciente = document.getElementById("paciente").value;
             const cpf = document.getElementById("cpf").value;
